@@ -15,5 +15,5 @@ export class CoursesEntity {
     sequence?: number
 
     @CreateDateColumn({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
-    createdAt: Date
+    created_at: Date
 }

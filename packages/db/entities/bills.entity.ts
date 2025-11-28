@@ -36,5 +36,5 @@ export class BillsEntity {
     assistant_id: string
 
     @CreateDateColumn({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
-    createdAt: Date
+    created_at: Date
 }
