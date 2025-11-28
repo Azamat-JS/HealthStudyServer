@@ -7,6 +7,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfig } from '../packages/lib/config/config';
+import { CoursesModule } from './courses/courses.module';
 import * as path from 'path';
 
 @Module({
@@ -39,7 +40,8 @@ import * as path from 'path';
     }),
     AssignmentsModule,
     GroupsModule,
-    UsersModule],
+    UsersModule,
+    CoursesModule],
   controllers: [],
   providers: [
     {

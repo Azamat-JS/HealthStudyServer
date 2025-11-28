@@ -22,7 +22,7 @@ export class UsersService {
         return this.usersRepo.find({ where: { role: UserRole.ASSISTANT } });
     }
 
-    async createUser(createUserDto: CreateUserDto): Promise<string> {
+    async createUser(createUserDto: CreateUserDto): Promise<string | UsersEntity> {
         try {
             const {phone, password} = createUserDto;
             const userExists = await this.usersRepo.findOne({ where: { phone } });
@@ -37,8 +37,8 @@ export class UsersService {
                 password: hashedPassword,
                 code: verificationCode.toString(),
             });
-            await this.usersRepo.save(user);
-            return 'User created';
+           return await this.usersRepo.save(user);
+           
         } catch (error) {
             throw new Error('Error creating user: ' + error.message);
         }
@@ -109,12 +109,16 @@ export class UsersService {
         return 'Total number of users';
     }
 
-    async editUser(id: string, updateUserDto: UpdateUserDto): Promise<string> {
+    async editUser(id: string, updateUserDto: UpdateUserDto): Promise<string | UsersEntity> {
         try {
             const user = await this.usersRepo.findOne({ where: { id } });
             if (user) {
                 await this.usersRepo.update(id, updateUserDto);
-                return 'User updated successfully';
+                const updatedUser = await this.usersRepo.findOne({ where: { id } });
+                if (!updatedUser) {
+                    return 'User not found';
+                }
+                return updatedUser;
             } else {
                 return 'User not found';
             }
