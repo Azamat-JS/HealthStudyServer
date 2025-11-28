@@ -24,11 +24,6 @@ export class AppConfig {
   @Value('DB_HOST')
   dbHost!: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Value('DB_PG_HOST')
-  dbPgHost!: string;
-
   @Transform(({ value }) => parseInt(value))
   @IsNotEmpty()
   @Value('DB_PORT')
