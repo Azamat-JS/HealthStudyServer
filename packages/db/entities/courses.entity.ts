@@ -1,6 +1,8 @@
-import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn} from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm'
+import { OrganizationEntity } from './organization.entity'
+import { ModuleEntity } from './modules.entity'
 
-@Entity({name: 'courses'})
+@Entity({ name: 'courses' })
 export class CoursesEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
@@ -11,9 +13,16 @@ export class CoursesEntity {
     @Column()
     status: string
 
-    @Column({type: 'int', nullable: true})
+    @ManyToOne(() => OrganizationEntity, { nullable: false })
+    @JoinColumn({ name: 'organization_id' })
+    organization: OrganizationEntity;
+
+    @OneToMany(() => ModuleEntity, module => module.course, { cascade: true })
+    modules: ModuleEntity[];
+
+    @Column({ type: 'int', nullable: true })
     sequence?: number
 
-    @CreateDateColumn({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date
 }

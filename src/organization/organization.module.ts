@@ -6,11 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrganizationEntity } from '../../packages/db/entities/organization.entity';
 
 @Module({
-    imports: [
-      ConfigifyModule.forRootAsync(),
-      TypeOrmModule.forFeature([OrganizationEntity]),
-    ],
+  imports: [
+    ConfigifyModule.forRootAsync(),
+    TypeOrmModule.forFeature([OrganizationEntity]),
+  ],
   controllers: [OrganizationController],
   providers: [OrganizationService],
 })
-export class OrganizationModule {}
+export class OrganizationModule { }

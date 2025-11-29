@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfig } from '../packages/lib/config/config';
 import { CoursesModule } from './courses/courses.module';
 import { OrganizationModule } from './organization/organization.module';
+import { ModulesModule } from './modules/modules.module';
 import * as path from 'path';
 
 @Module({
@@ -43,7 +44,8 @@ import * as path from 'path';
     GroupsModule,
     UsersModule,
     CoursesModule,
-    OrganizationModule],
+    OrganizationModule,
+    ModulesModule],
   controllers: [],
   providers: [
     {
