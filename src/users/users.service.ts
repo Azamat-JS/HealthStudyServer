@@ -51,37 +51,37 @@ export class UsersService {
         }
     }
 
-async loginUser(loginDto: LoginDto): Promise<any> {
-    try {
-        const user = await this.usersRepo.findOne({
-            where: { phone: loginDto.phone }
-        });
+    async loginUser(loginDto: LoginDto): Promise<any> {
+        try {
+            const user = await this.usersRepo.findOne({
+                where: { phone: loginDto.phone }
+            });
 
-        if (!user) {
-            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+            if (!user) {
+                throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+            }
+
+            const isMatch = await bcrypt.compare(loginDto.password, user.password);
+            if (!isMatch) {
+                throw new HttpException("Invalid credentials", HttpStatus.BAD_REQUEST);
+            }
+
+            const payload = {
+                id: user.id,
+                phone: user.phone,
+                role: user.role,
+            };
+
+            const token = await this.jwtService.signAsync(payload);
+
+            return { token };
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
+            throw new InternalServerErrorException("Login failed");
         }
-
-        const isMatch = await bcrypt.compare(loginDto.password, user.password);
-        if (!isMatch) {
-            throw new HttpException("Invalid credentials", HttpStatus.BAD_REQUEST);
-        }
-
-        const payload = {
-            id: user.id,
-            phone: user.phone,
-            role: user.role,
-        };
-
-        const token = await this.jwtService.signAsync(payload);
-
-        return { token };
-    } catch (error) {
-        if (error instanceof HttpException) {
-            throw error;
-        }
-        throw new InternalServerErrorException("Login failed");
     }
-}
 
 
     async forgotPassword(forgotDto: ForgotPasswordDto): Promise<string> {
@@ -136,8 +136,13 @@ async loginUser(loginDto: LoginDto): Promise<any> {
         return user;
     }
 
-    async getUserNumber(): Promise<string> {
-        return 'Total number of users';
+    async getUserNumber(): Promise<any> {
+        try {
+            const data = await this.usersRepo.count();
+            return { data };
+        } catch (error) {
+            throw new Error('Error fetching user number: ' + error.message);
+        }
     }
 
     async editUser(id: string, updateUserDto: UpdateUserDto): Promise<string | UsersEntity> {
