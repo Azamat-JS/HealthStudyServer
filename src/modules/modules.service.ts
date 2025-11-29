@@ -19,9 +19,9 @@ export class ModulesService {
         }
     }
 
-    async getAllModules(): Promise<ModuleEntity[]> {
+    async getAllModules(courseId: string): Promise<ModuleEntity[]> {
         try {
-            return await this.modulesRepo.find();
+            return await this.modulesRepo.find({ where: { course: { id: courseId } } });
         } catch (error) {
             throw new Error('Error fetching modules: ' + error.message);
         }

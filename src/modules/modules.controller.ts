@@ -12,8 +12,8 @@ export class ModulesController {
   }
 
   @Get('all/:courseId')
-  getAllModules() {
-    return this.modulesService.getAllModules();
+  getAllModules(@Param('courseId') courseId: string) {
+    return this.modulesService.getAllModules(courseId);
   }
 
   @Put('edit/:id')
