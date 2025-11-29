@@ -1,4 +1,5 @@
-import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn} from 'typeorm'
+import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn} from 'typeorm'
+import { AssignmentEntity } from './assignments.entity'
 
 @Entity({name: 'assignment_levels'})
 export class AssignmentLevelEntity {
@@ -14,8 +15,9 @@ export class AssignmentLevelEntity {
     @Column({type: 'uuid'})
     unit_id: string
 
-    @Column({type: 'uuid'})
-    assignment_id: string
+    @ManyToOne(() => AssignmentEntity, { nullable: false })
+    @JoinColumn({ name: 'assignment_id' })
+    assignment: AssignmentEntity
 
     @Column()
     status: string

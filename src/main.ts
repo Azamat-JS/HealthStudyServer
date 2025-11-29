@@ -8,8 +8,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
  app.enableCors({
     origin: [
-      'http://localhost:3002',
-      'http://localhost:3003',
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:5175',
+      'http://localhost:5176',
+      'http://localhost:5177',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -24,6 +27,8 @@ async function bootstrap() {
       forbidNonWhitelisted: false,
       transform: true,
     }),
-  );  await app.listen(config.port || 8000, '0.0.0.0');
+  );  await app.listen(config.port || 8000, '0.0.0.0', () => {
+    console.log(`Server is running on http://localhost:${config.port || 8000}`);
+  });
 }
 bootstrap();

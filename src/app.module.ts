@@ -10,6 +10,8 @@ import { AppConfig } from '../packages/lib/config/config';
 import { CoursesModule } from './courses/courses.module';
 import { OrganizationModule } from './organization/organization.module';
 import { ModulesModule } from './modules/modules.module';
+import { AssignmentLevelsModule } from './assignment_levels/assignment_levels.module';
+import { AssignmentTypesModule } from './assignment_types/assignment_types.module';
 import * as path from 'path';
 
 @Module({
@@ -45,7 +47,9 @@ import * as path from 'path';
     UsersModule,
     CoursesModule,
     OrganizationModule,
-    ModulesModule],
+    ModulesModule,
+    AssignmentLevelsModule,
+    AssignmentTypesModule],
   controllers: [],
   providers: [
     {

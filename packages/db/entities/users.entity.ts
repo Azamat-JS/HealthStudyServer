@@ -17,17 +17,17 @@ export class UsersEntity {
     @Column()
     password: string
 
-    @Column()
-    role: string
+    @Column({ nullable: true })
+    role?: string
 
-    @Column()
-    access: string
+    @Column({ nullable: true })
+    access?: string
 
-    @Column()
-    code: string
+    @Column({ nullable: true })
+    code?: string
 
-    @Column()
-    token: string
+    @Column({ nullable: true })
+    token?: string
 
     @Column({ type: 'timestamp', nullable: true })
     date_of_birth?: Date

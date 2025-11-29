@@ -10,9 +10,7 @@ export class OrganizationService {
 
     async createOrganization(createOrganizationDto: CreateOrganizationDto): Promise<string | OrganizationEntity> {
         try {
-            const organization = this.organizationRepo.create({
-                ...createOrganizationDto,
-            });
+            const organization = this.organizationRepo.create(createOrganizationDto);
             await this.organizationRepo.save(organization);
             return organization;
         } catch (error) {

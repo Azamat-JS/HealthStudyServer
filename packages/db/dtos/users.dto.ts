@@ -15,29 +15,29 @@ export class CreateUserDto {
     @IsString()
     password: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    access: string;
+    access?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
-    step: number;
+    step?: number;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    code: string;
+    code?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    token: string;
+    token?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsPhoneNumber()
-    phone: string;
+    phone?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    role: string;
+    role?: string;
 }
 
 export class UpdateUserDto {

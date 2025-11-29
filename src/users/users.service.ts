@@ -1,14 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersEntity } from '../../packages/db/entities/users.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto, ForgotPasswordDto, LoginDto, ResendCodeDto, UpdateUserDto, VerifyDto } from '../../packages/db/dtos/users.dto';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from '../../packages/lib/enums/enum';
+import { JwtService } from '@nestjs/jwt';
+import { AppConfig } from '../../packages/lib/config/config';
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectRepository(UsersEntity) private usersRepo: Repository<UsersEntity>) { }
+    constructor(
+        @InjectRepository(UsersEntity) private usersRepo: Repository<UsersEntity>,
+        private jwtService: JwtService,
+        private readonly config: AppConfig
+    ) { }
 
     async getAllUsers(): Promise<UsersEntity[]> {
         return this.usersRepo.find();
@@ -24,38 +30,59 @@ export class UsersService {
 
     async createUser(createUserDto: CreateUserDto): Promise<string | UsersEntity> {
         try {
-            const {phone, password} = createUserDto;
+            const { phone, password } = createUserDto;
             const userExists = await this.usersRepo.findOne({ where: { phone } });
             if (userExists) {
-                return 'User already exists';
+                throw new Error('User with this phone number already exists');
             }
 
             const hashedPassword = await bcrypt.hash(password, 12);
             const verificationCode = Math.floor(Math.random() * 10000);
+            console.log('Verification Code:', verificationCode);
             const user = this.usersRepo.create({
                 ...createUserDto,
                 password: hashedPassword,
                 code: verificationCode.toString(),
             });
-           return await this.usersRepo.save(user);
-           
+            return await this.usersRepo.save(user);
+
         } catch (error) {
             throw new Error('Error creating user: ' + error.message);
         }
     }
 
-    async loginUser(loginDto: LoginDto): Promise<string> {
-        try {
-            const userExists = await this.usersRepo.findOne({ where: { phone: loginDto.phone, password: loginDto.password } });
-            if (userExists) {
-                return 'User logged in';
-            } else {
-                return 'Invalid credentials';
-            }
-        } catch (error) {
-            throw new Error('Error logging in: ' + error.message);
+async loginUser(loginDto: LoginDto): Promise<any> {
+    try {
+        const user = await this.usersRepo.findOne({
+            where: { phone: loginDto.phone }
+        });
+
+        if (!user) {
+            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
         }
+
+        const isMatch = await bcrypt.compare(loginDto.password, user.password);
+        if (!isMatch) {
+            throw new HttpException("Invalid credentials", HttpStatus.BAD_REQUEST);
+        }
+
+        const payload = {
+            id: user.id,
+            phone: user.phone,
+            role: user.role,
+        };
+
+        const token = await this.jwtService.signAsync(payload);
+
+        return { token };
+    } catch (error) {
+        if (error instanceof HttpException) {
+            throw error;
+        }
+        throw new InternalServerErrorException("Login failed");
     }
+}
+
 
     async forgotPassword(forgotDto: ForgotPasswordDto): Promise<string> {
         try {
@@ -85,24 +112,28 @@ export class UsersService {
     }
 
     async resendPassword(resendDto: ResendCodeDto): Promise<string> {
-       try {
-        const user = await this.usersRepo.findOne({ where: { phone: resendDto.phone } });
-        if (user) {
-            const newCode = Math.floor(Math.random() * 10000);
-            user.code = newCode.toString();
-            await this.usersRepo.save(user);
-            // Logic to send new code would go here
-            return 'Verification code resent';
-        } else {
-            return 'User not found';
+        try {
+            const user = await this.usersRepo.findOne({ where: { phone: resendDto.phone } });
+            if (user) {
+                const newCode = Math.floor(Math.random() * 10000);
+                user.code = newCode.toString();
+                await this.usersRepo.save(user);
+                // Logic to send new code would go here
+                return 'Verification code resent';
+            } else {
+                return 'User not found';
+            }
+        } catch (error) {
+            throw new Error('Error resending code: ' + error.message);
         }
-       } catch (error) {
-        throw new Error('Error resending code: ' + error.message);
-       }
     }
 
-    async getProfile(): Promise<string> {
-        return 'User profile data';
+    async getProfile(userId: string): Promise<any> {
+        const user = await this.usersRepo.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+        }
+        return user;
     }
 
     async getUserNumber(): Promise<string> {

@@ -10,7 +10,7 @@ export class AssignmentsService {
 
     async createAssignment(createAssignmentDto: CreateAssignmentDto): Promise<AssignmentEntity | string> {
         try {
-            const assignment = this.assignmentRepo.create({});
+            const assignment = this.assignmentRepo.create(createAssignmentDto);
             await this.assignmentRepo.save(assignment);
             return assignment;
         } catch (error) {

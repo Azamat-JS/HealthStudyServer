@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { create } from 'domain';
 import { CreateUserDto, ForgotPasswordDto, LoginDto, ResendCodeDto, UpdateUserDto, VerifyDto } from '../../packages/db/dtos/users.dto';
 import { JwtAuthGuard } from '../../packages/guards/jwt.guard';
+import { Request } from 'express';
 
 @Controller('users')
 export class UsersController {
@@ -23,13 +23,15 @@ export class UsersController {
     return this.usersService.getAllAssistants();
   }
 
-  @Post('create')
+  @Post('application/create')
   createUser(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     return this.usersService.createUser(createUserDto);
   }
 
   @Post('login')
   loginUser(@Body() loginDto: LoginDto) {
+    console.log(loginDto);
     return this.usersService.loginUser(loginDto);
   }
 
@@ -45,13 +47,15 @@ export class UsersController {
 
   @Post('verify-phone')
   verifyPhone(@Body() verifyDto: VerifyDto) {
+    console.log(verifyDto);
     return this.usersService.verifyPhone(verifyDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  getProfile() {
-    return this.usersService.getProfile();
+  getProfile(@Req() req: Request & { user: { id: string } }) {
+    const userId = req.user.id;
+    return this.usersService.getProfile(userId);
   }
 
   @UseGuards(JwtAuthGuard)

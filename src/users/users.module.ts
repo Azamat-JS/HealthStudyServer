@@ -20,6 +20,6 @@ import { AppConfig } from '../../packages/lib/config/config';
     })
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, AppConfig],
 })
 export class UsersModule { }

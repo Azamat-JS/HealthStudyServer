@@ -1,4 +1,5 @@
-import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn} from 'typeorm'
+import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn} from 'typeorm'
+import { ModuleEntity } from './modules.entity'
 
 @Entity({name: 'assignment_types'})
 export class AssignmentTypesEntity {
@@ -11,8 +12,9 @@ export class AssignmentTypesEntity {
     @Column()
     weight: string
 
-    @Column({type: 'uuid'})
-    module_id: string
+    @ManyToOne(() => ModuleEntity, { nullable: false })
+    @JoinColumn({ name: 'module_id' })   
+    module: ModuleEntity
 
     @Column()
     status: string
