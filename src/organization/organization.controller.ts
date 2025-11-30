@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
-import { CreateCourseDto } from '../../packages/db/dtos/courses.dto';
 import { CreateOrganizationDto, UpdateteOrganizationDto } from '../../packages/db/dtos/organization.dto';
 
 @Controller('organization')

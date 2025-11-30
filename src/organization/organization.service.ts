@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrganizationEntity } from '../../packages/db/entities/organization.entity';
 import { Repository } from 'typeorm';
@@ -28,7 +28,7 @@ export class OrganizationService {
 
     async getOrganization(id: string): Promise<OrganizationEntity | string> {
         try {
-            const organization = await this.organizationRepo.findOne({ where: { id } });
+            const organization = await this.organizationRepo.findOne({ where: { id }, relations: ['courses'] });
             if (!organization) {
                 return 'Organization not found';
             }
