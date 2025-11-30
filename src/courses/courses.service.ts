@@ -25,7 +25,7 @@ export class CoursesService {
             await this.coursesRepo.save(course);
             return course;
         } catch (error) {
-            throw new Error('Error creating course: ' + error.message);
+            throw new InternalServerErrorException('Error creating course: ' + error.message);
         }
     }
 
@@ -33,7 +33,7 @@ export class CoursesService {
         try {
             return await this.coursesRepo.find({ order: { sequence: 'ASC' } });
         } catch (error) {
-            throw new Error('Error fetching courses: ' + error.message);
+            throw new InternalServerErrorException('Error fetching courses: ' + error.message);
         }
     }
 
