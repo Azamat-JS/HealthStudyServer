@@ -17,7 +17,7 @@ export class CoursesEntity {
     @JoinColumn({ name: 'organization_id' })
     organization: OrganizationEntity;
 
-    @OneToMany(() => ModuleEntity, module => module.course, { cascade: true })
+    @OneToMany(() => ModuleEntity, module => module.course, {nullable:true, cascade: true })
     modules: ModuleEntity[];
 
     @Column({ type: 'int', nullable: true })

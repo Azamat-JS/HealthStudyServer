@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CoursesEntity } from '../../packages/db/entities/courses.entity';
 import { Repository } from 'typeorm';
@@ -12,9 +12,15 @@ export class CoursesService {
         try {
             const allCourses = await this.coursesRepo.find();
             const sequence = allCourses.length + 1;
+            const organizationId = createCourseDto.organization_id;
+            const organization = await this.coursesRepo.manager.findOne('OrganizationEntity', { where: { id: organizationId } });
+            if (!organization) {
+                throw new NotFoundException('Organization not found');
+            }
             const course = this.coursesRepo.create({
                 ...createCourseDto,
                 sequence: sequence,
+                organization: organization,
             });
             await this.coursesRepo.save(course);
             return course;
@@ -41,7 +47,7 @@ export class CoursesService {
         return this.coursesRepo.save(course);
          
        } catch (error) {
-        throw new Error('Error updating course: ' + error.message);
+        throw new InternalServerErrorException('Error updating course: ' + error.message);
        }
     }
 }

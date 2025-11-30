@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, JoinColumn, ManyToOne } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany } from 'typeorm'
 import { CoursesEntity } from './courses.entity'
 
 @Entity({ name: 'organizations' })
@@ -9,9 +9,8 @@ export class OrganizationEntity {
     @Column()
     name: string
 
-    @ManyToOne(() => CoursesEntity, courses => courses.organization, { nullable: true })
-    @JoinColumn({ name: 'course_id' })
-    course: CoursesEntity[];
+    @OneToMany(() => CoursesEntity, course => course.organization)
+    courses: CoursesEntity[];
 
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date

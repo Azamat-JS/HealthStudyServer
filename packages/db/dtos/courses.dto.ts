@@ -12,6 +12,10 @@ export class CreateCourseDto {
     @IsOptional()
     @IsNumber()
     sequence?: number;
+
+    @IsNotEmpty()
+    @IsString()
+    organization_id: string;
 }
 
 export class UpdateCourseDto {
