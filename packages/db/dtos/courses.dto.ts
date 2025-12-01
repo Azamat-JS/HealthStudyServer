@@ -9,10 +9,6 @@ export class CreateCourseDto {
     @IsString()
     status: string;
 
-    @IsOptional()
-    @IsNumber()
-    sequence?: number;
-
     @IsNotEmpty()
     @IsString()
     organization_id: string;

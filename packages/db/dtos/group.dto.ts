@@ -29,12 +29,8 @@ export class CreateGroupDto {
     @IsUUID()
     module_id: string;
 
-    @IsOptional()
-    @IsNumber()
-    sequence?: number;
-
     @IsNotEmpty()
-    @IsString()
+    @IsUUID()
     organization_id: string;
 
     @IsOptional()

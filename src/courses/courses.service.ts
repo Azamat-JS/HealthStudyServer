@@ -10,8 +10,8 @@ export class CoursesService {
 
     async createCourse(createCourseDto: CreateCourseDto): Promise<string | CoursesEntity> {
         try {
-            const allCourses = await this.coursesRepo.find();
-            const sequence = allCourses.length + 1;
+            const allCourses = await this.coursesRepo.count();
+            const sequence = allCourses + 1;
             const organizationId = createCourseDto.organization_id;
             const organization = await this.coursesRepo.manager.findOne('OrganizationEntity', { where: { id: organizationId } });
             if (!organization) {
