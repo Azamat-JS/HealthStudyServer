@@ -3,17 +3,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CoursesEntity } from '../../packages/db/entities/courses.entity';
 import { Repository } from 'typeorm';
 import { CreateCourseDto, UpdateCourseDto } from '../../packages/db/dtos/courses.dto';
+import { OrganizationEntity } from '../../packages/db/entities/organization.entity';
 
 @Injectable()
 export class CoursesService {
-    constructor(@InjectRepository(CoursesEntity) private coursesRepo: Repository<CoursesEntity>) { }
+    constructor(@InjectRepository(CoursesEntity) private coursesRepo: Repository<CoursesEntity>,
+        @InjectRepository(OrganizationEntity) private organizationsRepo: Repository<OrganizationEntity>,  
+) { }
 
     async createCourse(createCourseDto: CreateCourseDto): Promise<string | CoursesEntity> {
         try {
             const allCourses = await this.coursesRepo.count();
             const sequence = allCourses + 1;
             const organizationId = createCourseDto.organization_id;
-            const organization = await this.coursesRepo.manager.findOne('OrganizationEntity', { where: { id: organizationId } });
+            const organization = await this.organizationsRepo.findOne({ where: { id: organizationId } });
             if (!organization) {
                 throw new NotFoundException('Organization not found');
             }
