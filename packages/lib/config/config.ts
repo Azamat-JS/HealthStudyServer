@@ -36,6 +36,11 @@ export class AppConfig {
 
   @IsString()
   @IsNotEmpty()
+  @Value('DATABASE_URL')
+  databaseUrl!: string;
+
+  @IsString()
+  @IsNotEmpty()
   @Value('JWT_SECRET')
   jwtSecret: string;
 

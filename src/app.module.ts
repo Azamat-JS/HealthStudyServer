@@ -12,6 +12,7 @@ import { OrganizationModule } from './organization/organization.module';
 import { ModulesModule } from './modules/modules.module';
 import { AssignmentLevelsModule } from './assignment_levels/assignment_levels.module';
 import { AssignmentTypesModule } from './assignment_types/assignment_types.module';
+import { GroupAttendanceModule } from './group_attendance/group_attendance.module';
 import * as path from 'path';
 
 @Module({
@@ -21,17 +22,14 @@ import * as path from 'path';
       inject: [AppConfig],
       useFactory: (config: AppConfig) => ({
         type: 'postgres',
-        host: config.dbHost,
-        port: config.dbPort,
-        username: config.dbUsername,
-        password: config.dbPassword,
-        database: config.dbName,
+        url: config.databaseUrl,
         autoLoadEntities: true,
         synchronize: true,
         retryAttempts: 3,
+        ssl: { rejectUnauthorized: false },
         entities: [
-          path.join(__dirname, '..', 'packages', 'db', 'entities', '*.entity.{ts}')
-        ],
+          path.join(__dirname, '..', 'packages', 'db', 'entities', '**', '*.entity{.ts,.js}')
+        ]
       }),
     }),
     ThrottlerModule.forRoot({
@@ -49,7 +47,8 @@ import * as path from 'path';
     OrganizationModule,
     ModulesModule,
     AssignmentLevelsModule,
-    AssignmentTypesModule],
+    AssignmentTypesModule,
+    GroupAttendanceModule],
   controllers: [],
   providers: [
     {
