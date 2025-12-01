@@ -4,7 +4,7 @@ import { UsersEntity } from '../../packages/db/entities/users.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto, ForgotPasswordDto, LoginDto, ResendCodeDto, UpdateUserDto, VerifyDto } from '../../packages/db/dtos/users.dto';
 import * as bcrypt from 'bcrypt';
-import { UserRole } from '../../packages/lib/enums/enum';
+import { UserRole, UserStatus } from '../../packages/lib/enums/enum';
 import { JwtService } from '@nestjs/jwt';
 import { AppConfig } from '../../packages/lib/config/config';
 
@@ -42,6 +42,8 @@ export class UsersService {
             const user = this.usersRepo.create({
                 ...createUserDto,
                 password: hashedPassword,
+                role: UserRole.USER,
+                access: UserStatus.PENDING,
                 code: verificationCode.toString(),
             });
             return await this.usersRepo.save(user);
