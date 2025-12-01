@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, Ma
 import { OrganizationEntity } from './organization.entity'
 import { UsersEntity } from './users.entity'
 import { ModuleEntity } from './modules.entity'
+import { CoursesEntity } from './courses.entity';
 
 @Entity({ name: 'groups' })
 export class GroupEntity {
@@ -11,8 +12,9 @@ export class GroupEntity {
     @Column()
     name: string;
 
-    @Column({ type: 'uuid' })
-    course_id: string;
+    @ManyToOne(() => CoursesEntity, { nullable: false })
+    @JoinColumn({ name: 'course_id' })
+    course: CoursesEntity;
 
     @ManyToOne(() => UsersEntity, { nullable: false })
     @JoinColumn({ name: 'teacher_id' })
