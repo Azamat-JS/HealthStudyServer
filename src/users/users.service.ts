@@ -67,14 +67,16 @@ export class UsersService {
             if (!isMatch) {
                 throw new HttpException("Invalid credentials", HttpStatus.BAD_REQUEST);
             }
-
+            
             const payload = {
                 id: user.id,
                 phone: user.phone,
                 role: user.role,
             };
-
+            
             const token = await this.jwtService.signAsync(payload);
+
+            await this.editUser(user.id, {token: token});
 
             return { token };
         } catch (error) {
