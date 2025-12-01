@@ -4,7 +4,6 @@ import { GroupsController } from './groups.controller';
 import { ConfigifyModule } from '@itgorillaz/configify';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GroupEntity } from '../../packages/db/entities/group.entity';
-import { OrganizationEntity } from '../../packages/db/entities/organization.entity';
 
 @Module({
     imports: [

@@ -1,5 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToOne, JoinColumn, OneToOne } from 'typeorm'
-import { OrganizationEntity } from './organization.entity'
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm'
 import { UsersEntity } from './users.entity'
 import { ModuleEntity } from './modules.entity'
 import { GroupEntity } from './group.entity';
@@ -17,7 +16,7 @@ export class GroupAttendanceEntity {
     group: GroupEntity;
 
     @ManyToOne(() => UsersEntity, { nullable: false })
-    @JoinColumn({ name: 'group_id' })
+    @JoinColumn({ name: 'student_id' })
     student: UsersEntity;
 
     @Column({ type: 'uuid' })
@@ -28,7 +27,7 @@ export class GroupAttendanceEntity {
     module: ModuleEntity;
 
     @Column({ type: 'boolean', default: false })
-    isAttended: boolean;
+    is_attended: boolean;
 
     @Column({ type: 'text', nullable: true })
     comment?: string;
