@@ -3,14 +3,22 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ModuleEntity } from '../../packages/db/entities/modules.entity';
 import { Repository } from 'typeorm';
 import { CreateModuleDto, UpdateModuleDto } from '../../packages/db/dtos/modules.dto';
+import { CoursesEntity } from '../../packages/db/entities/courses.entity';
 
 @Injectable()
 export class ModulesService {
-    constructor(@InjectRepository(ModuleEntity) private modulesRepo: Repository<ModuleEntity>) { }
+    constructor(@InjectRepository(ModuleEntity) private modulesRepo: Repository<ModuleEntity>,
+                @InjectRepository(CoursesEntity) private coursesRepo: Repository<CoursesEntity>,
+) { }
     async createModule(createModuleDto: CreateModuleDto): Promise<ModuleEntity | string> {
         try {
+            const course = await this.coursesRepo.findOne({ where: { id: createModuleDto.course_id } });
+            if (!course) {
+                return 'Course not found';
+            }
             const module = this.modulesRepo.create({
                 ...createModuleDto,
+                course: course,
             });
             await this.modulesRepo.save(module);
             return module;

@@ -11,11 +11,11 @@ export class CreateModuleDto {
 
     @IsOptional()
     @IsNumber()
-    max_students: number;
+    max_students?: number;
 
     @IsOptional()
     @IsString()
-    is_core: string;
+    is_core?: string;
 
     @IsNotEmpty()
     @IsUUID()

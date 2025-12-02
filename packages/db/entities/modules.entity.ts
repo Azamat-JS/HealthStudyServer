@@ -16,14 +16,14 @@ export class ModuleEntity {
     @Column({ type: 'int', nullable: true })
     max_students?: number;
 
-    @Column({ type: 'uuid' })
-    isCore: string
+    @Column({ nullable: true})
+    is_core?: string
 
-    @Column()
-    status: string
+    @Column({nullable: true})
+    status?: string
 
-    @Column({ type: 'int' })
-    sequence: number
+    @Column({ type: 'int', nullable:true })
+    sequence?: number
 
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date
