@@ -13,6 +13,7 @@ import { ModulesModule } from './modules/modules.module';
 import { AssignmentLevelsModule } from './assignment_levels/assignment_levels.module';
 import { AssignmentTypesModule } from './assignment_types/assignment_types.module';
 import { GroupAttendanceModule } from './group_attendance/group_attendance.module';
+import { QuestionLevelsModule } from './question_levels/question_levels.module';
 import * as path from 'path';
 
 @Module({
@@ -48,7 +49,9 @@ import * as path from 'path';
     ModulesModule,
     AssignmentLevelsModule,
     AssignmentTypesModule,
-    GroupAttendanceModule],
+    GroupAttendanceModule,
+    QuestionLevelsModule
+  ],
   controllers: [],
   providers: [
     {
