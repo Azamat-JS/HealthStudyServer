@@ -13,8 +13,6 @@ export class CoursesService {
 
     async createCourse(createCourseDto: CreateCourseDto): Promise<string | CoursesEntity> {
         try {
-            const allCourses = await this.coursesRepo.count();
-            const sequence = allCourses + 1;
             const organizationId = createCourseDto.organization_id;
             const organization = await this.organizationsRepo.findOne({ where: { id: organizationId } });
             if (!organization) {
@@ -22,7 +20,6 @@ export class CoursesService {
             }
             const course = this.coursesRepo.create({
                 ...createCourseDto,
-                sequence: sequence,
                 organization: organization,
             });
             await this.coursesRepo.save(course);

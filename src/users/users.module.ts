@@ -15,7 +15,7 @@ import { AppConfig } from '../../packages/lib/config/config';
       inject: [AppConfig],
       useFactory: (config: AppConfig) => ({
         secret: config.jwtSecret,
-        signOptions: { expiresIn: 60 },
+        signOptions: { expiresIn: "7d" },
       }),
     })
   ],

@@ -6,14 +6,12 @@ import { CreateUserDto, ForgotPasswordDto, LoginDto, ResendCodeDto, UpdateUserDt
 import * as bcrypt from 'bcrypt';
 import { UserRole, UserStatus } from '../../packages/lib/enums/enum';
 import { JwtService } from '@nestjs/jwt';
-import { AppConfig } from '../../packages/lib/config/config';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(UsersEntity) private usersRepo: Repository<UsersEntity>,
         private jwtService: JwtService,
-        private readonly config: AppConfig
     ) { }
 
     async getAllUsers(): Promise<UsersEntity[]> {
@@ -67,17 +65,16 @@ export class UsersService {
             if (!isMatch) {
                 throw new HttpException("Invalid credentials", HttpStatus.BAD_REQUEST);
             }
-            
+
             const payload = {
                 id: user.id,
                 phone: user.phone,
                 role: user.role,
             };
-            
+
             const token = await this.jwtService.signAsync(payload);
 
-            await this.editUser(user.id, {token: token});
-
+            await this.editUser(user.id, { token: token });
             return { token };
         } catch (error) {
             if (error instanceof HttpException) {

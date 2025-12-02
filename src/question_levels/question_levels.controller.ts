@@ -1,9 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { QuestionLevelsService } from './question_levels.service';
 import { CreateQuestionLevelDto, UpdateQuestionLevelDto } from '../../packages/db/dtos/question_levels.dto';
-import { create } from 'domain';
 
-@Controller('question-levels')
+@Controller('questionlevels')
 export class QuestionLevelsController {
   constructor(private readonly questionLevelsService: QuestionLevelsService) {}
 
@@ -13,17 +12,17 @@ export class QuestionLevelsController {
   }
 
   @Get('all/:courseId')
-  async getAllQuestionLevels(courseId: string) {
+  async getAllQuestionLevels(@Param('courseId') courseId: string) {
     return this.questionLevelsService.getAllQuestionLevels(courseId);
   }
 
-  @Put('update/:levelId')
+  @Put('edit/:levelId')
   async updateQuestionLevel(@Param('levelId') levelId: string, @Body() updateLevelDto: UpdateQuestionLevelDto) {
     return this.questionLevelsService.updateQuestionLevel(levelId, updateLevelDto);
   }
 
   @Delete('delete/:levelId')
-  async deleteQuestionLevel(levelId: string) {
+  async deleteQuestionLevel(@Param('levelId') levelId: string){
     return this.questionLevelsService.deleteQuestionLevel(levelId);
   }
 }
