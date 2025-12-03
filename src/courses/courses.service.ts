@@ -8,8 +8,8 @@ import { OrganizationEntity } from '../../packages/db/entities/organization.enti
 @Injectable()
 export class CoursesService {
     constructor(@InjectRepository(CoursesEntity) private coursesRepo: Repository<CoursesEntity>,
-        @InjectRepository(OrganizationEntity) private organizationsRepo: Repository<OrganizationEntity>,  
-) { }
+        @InjectRepository(OrganizationEntity) private organizationsRepo: Repository<OrganizationEntity>,
+    ) { }
 
     async createCourse(createCourseDto: CreateCourseDto): Promise<string | CoursesEntity> {
         try {
@@ -38,16 +38,27 @@ export class CoursesService {
     }
 
     async editCourse(id: string, updateCourseDto: UpdateCourseDto): Promise<CoursesEntity | string> {
-       try {
-        const course = await this.coursesRepo.findOne({ where: { id } });
-        if (!course) {
-            return 'Course not found';
+        try {
+            const course = await this.coursesRepo.findOne({ where: { id } });
+            if (!course) {
+                return 'Course not found';
+            }
+            Object.assign(course, updateCourseDto);
+            return this.coursesRepo.save(course);
+        } catch (error) {
+            throw new InternalServerErrorException('Error updating course: ' + error.message);
         }
-        Object.assign(course, updateCourseDto);
-        return this.coursesRepo.save(course);
-         
-       } catch (error) {
-        throw new InternalServerErrorException('Error updating course: ' + error.message);
-       }
+    }
+
+    async deleteCourse(id: string): Promise<{ message: string }> {
+        try {
+            const course = await this.coursesRepo.delete(id);
+            if (course.affected === 0) {
+                throw new NotFoundException('Course not found');
+            }
+            return { message: 'Course deleted successfully' }
+        } catch (error) {
+            throw new InternalServerErrorException('Error deleting course: ' + error.message);
+        }
     }
 }
