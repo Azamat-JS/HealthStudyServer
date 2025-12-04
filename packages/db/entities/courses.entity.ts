@@ -13,7 +13,7 @@ export class CoursesEntity {
     @Column()
     status: string
 
-    @ManyToOne(() => OrganizationEntity, { nullable: false })
+    @ManyToOne(() => OrganizationEntity, { nullable: false, onDelete: 'CASCADE',})
     @JoinColumn({ name: 'organization_id' })
     organization: OrganizationEntity;
 

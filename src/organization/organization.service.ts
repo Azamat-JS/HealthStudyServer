@@ -10,6 +10,10 @@ export class OrganizationService {
 
     async createOrganization(createOrganizationDto: CreateOrganizationDto): Promise<string | OrganizationEntity> {
         try {
+            const organizationExists = await this.organizationRepo.findOne({ where: { username: createOrganizationDto.username } });
+            if (organizationExists) {
+                return 'Organization already exists';
+            }
             const organization = this.organizationRepo.create(createOrganizationDto);
             await this.organizationRepo.save(organization);
             return organization;

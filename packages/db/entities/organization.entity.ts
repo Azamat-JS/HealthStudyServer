@@ -9,7 +9,10 @@ export class OrganizationEntity {
     @Column()
     name: string
 
-    @OneToMany(() => CoursesEntity, course => course.organization)
+    @Column({ unique: true })
+    username: string
+
+    @OneToMany(() => CoursesEntity, course => course.organization, { nullable: true, cascade: true })
     courses: CoursesEntity[];
 
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
